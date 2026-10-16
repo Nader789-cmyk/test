@@ -997,7 +997,8 @@ class MoomooRecorder:
                 if dt.tzinfo is None:
                     dt = NY_TZ.localize(dt.to_pydatetime())
                 else:
-                    dt = dt.to_pydatetime().astimezone(NY_TZ)                if dt >= cutoff:
+                    dt = dt.to_pydatetime().astimezone(NY_TZ)
+                if dt >= cutoff:
                     recent.append(r)
             except Exception:
                 continue
@@ -1996,7 +1997,8 @@ def build_row(symbol: str, f: Dict[str, Any], snap: Dict[str, Any], l2: Dict[str
 
 
 
-class MinuteFeatureAccumulator:    """RAM-only microstructure accumulator for one closed-minute feature row.
+class MinuteFeatureAccumulator:
+    """RAM-only microstructure accumulator for one closed-minute feature row.
 
     v7 deliberately avoids raw CSV event stores. Push/poll events update this object,
     and once a 1-minute RTH bar is closed we emit compact engineered features then reset.
@@ -3003,7 +3005,8 @@ class IBKRExecutionEngine:
                 last = safe_float(getattr(self.ticker, "last", 0.0))
                 close = safe_float(getattr(self.ticker, "close", 0.0))
                 # ibkr_available means a usable L1 quote is present, not merely that the
-                # broker socket is connected. Broker/account fields below remain available                # even while market-data permissions are warming up.
+                # broker socket is connected. Broker/account fields below remain available
+                # even while market-data permissions are warming up.
                 market_valid = any(v > 0 for v in (bid, ask, last, close))
                 out.update({
                     "ibkr_available": 1.0 if market_valid else 0.0,
@@ -4002,7 +4005,8 @@ class IBKRExecutionEngine:
                                "trade_record": rec})
                 return result
             # Normal exit did not fill fully: restore protection and remain long.
-            self.execution_state = "LONG_CONFIRMED"            entry_px = safe_float((self.active_trade or {}).get("entry_price"), self.position_avg_cost())
+            self.execution_state = "LONG_CONFIRMED"
+            entry_px = safe_float((self.active_trade or {}).get("entry_price"), self.position_avg_cost())
             self.ensure_target()
             result["error"] = "AON_EXIT_NOT_FILLED_FULL_SIZE_TARGET_RESTORED"
             self._event("EXIT_ABORTED_STILL_LONG", action="SELL", qty=qty, intended_qty=qty,
